@@ -136,10 +136,11 @@
         /* ============ CHARTS SECTION ============ */
         .charts-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
             padding: 15px;
             background: white;
+            align-items: center;
         }
 
         .chart-box {
@@ -173,22 +174,29 @@
         }
 
         /* ============ EMOTION SECTION ============ */
-        .emotion-section {
-            padding: 20px 15px;
-            background: white;
-            text-align: center;
-            border-right: 4px solid #c0392b;
-            border-left: 4px solid #c0392b;
-            margin: 0 15px;
-            border-radius: 8px;
+        .emotion-box {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            min-height: 150px;
         }
 
         .emotion-display {
-            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        .emotion-icon {
-            font-size: 60px;
+        .emotion-svg {
+            width: 80px;
+            height: 80px;
             animation: pulse 2s infinite;
         }
 
@@ -198,9 +206,9 @@
         }
 
         .emotion-text {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-light);
-            margin-top: 10px;
+            text-align: center;
         }
 
         /* ============ SHORTCUTS SECTION ============ */
@@ -601,25 +609,35 @@
             <button class="year-btn" onclick="nextYear()">+</button>
         </div>
 
-        <!-- CHARTS SECTION -->
+        <!-- CHARTS SECTION WITH EMOTION -->
         <div class="charts-container">
             <div class="chart-box">
                 <div class="chart-title">هزینه‌ها</div>
                 <div class="chart-placeholder">Sunburst<br>Chart</div>
                 <div style="font-size: 10px; color: var(--danger-color);">۵۲,۰۰۰ تومان</div>
             </div>
+
+            <!-- EMOTION DISPLAY -->
+            <div class="emotion-box" id="emotionBox">
+                <div class="emotion-display">
+                    <svg class="emotion-svg" id="emotionSVG" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Sad Face -->
+                        <circle cx="100" cy="100" r="80" fill="#f5f5f5" stroke="#1a5f7a" stroke-width="2"/>
+                        <!-- Left Eye -->
+                        <circle cx="75" cy="80" r="8" fill="#1a5f7a"/>
+                        <!-- Right Eye -->
+                        <circle cx="125" cy="80" r="8" fill="#1a5f7a"/>
+                        <!-- Sad Mouth -->
+                        <path d="M 70 130 Q 100 110 130 130" stroke="#1a5f7a" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    <div class="emotion-text" id="emotionText">هزینه‌ها بیشتر از درآمدها است!</div>
+                </div>
+            </div>
+
             <div class="chart-box">
                 <div class="chart-title">درآمدها</div>
                 <div class="chart-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Pie<br>Chart</div>
                 <div style="font-size: 10px; color: var(--secondary-color);">۳۵,۰۰۰ تومان</div>
-            </div>
-        </div>
-
-        <!-- EMOTION SECTION -->
-        <div class="emotion-section">
-            <div class="emotion-display">
-                <div class="emotion-icon" id="emotionIcon">😢</div>
-                <div class="emotion-text">هزینه‌ها بیشتر از درآمدها است!</div>
             </div>
         </div>
 
@@ -841,7 +859,7 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid white;">
                         <span style="font-weight: 600;">خالص:</span>
-                        <span style=\"font-weight: 600; color: var(--warning-color);\">-۱,۵۰۰ تومان</span>
+                        <span style="font-weight: 600; color: var(--warning-color);">-۱,۵۰۰ تومان</span>
                     </div>
                 </div>
             </div>
@@ -935,7 +953,7 @@
         }
 
         function updateYearDisplay() {
-            document.getElementById('yearDisplay').textContent = this.formatPersianNumber(currentYear.toString());
+            document.getElementById('yearDisplay').textContent = formatPersianNumber(currentYear.toString());
         }
 
         function toggleShortcuts() {
@@ -1012,9 +1030,52 @@
             return num.replace(/\d/g, d => persianDigits[d]);
         }
 
+        function updateEmotionDisplay() {
+            const expenses = 52000;
+            const income = 35000;
+            const emotionBox = document.getElementById('emotionBox');
+            const emotionSVG = document.getElementById('emotionSVG');
+            const emotionText = document.getElementById('emotionText');
+
+            if (expenses > income) {
+                // Sad Face
+                emotionSVG.innerHTML = `
+                    <circle cx="100" cy="100" r="80" fill="#f5f5f5" stroke="#1a5f7a" stroke-width="2"/>
+                    <circle cx="75" cy="80" r="8" fill="#1a5f7a"/>
+                    <circle cx="125" cy="80" r="8" fill="#1a5f7a"/>
+                    <path d="M 70 130 Q 100 110 130 130" stroke="#1a5f7a" stroke-width="4" fill="none" stroke-linecap="round"/>
+                `;
+                emotionText.textContent = 'هزینه‌ها بیشتر از درآمدها است!';
+                emotionState = 'sad';
+            } else if (income > expenses) {
+                // Happy Face
+                emotionSVG.innerHTML = `
+                    <circle cx="100" cy="100" r="80" fill="#f5f5f5" stroke="#1a5f7a" stroke-width="2"/>
+                    <circle cx="75" cy="70" r="8" fill="#1a5f7a"/>
+                    <circle cx="125" cy="70" r="8" fill="#1a5f7a"/>
+                    <path d="M 70 120 Q 100 140 130 120" stroke="#1a5f7a" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <path d="M 60 95 Q 80 85 95 95" stroke="#1a5f7a" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 140 95 Q 120 85 105 95" stroke="#1a5f7a" stroke-width="3" fill="none" stroke-linecap="round"/>
+                `;
+                emotionText.textContent = 'درآمدها بیشتر از هزینه‌ها است!';
+                emotionState = 'happy';
+            } else {
+                // Neutral Face
+                emotionSVG.innerHTML = `
+                    <circle cx="100" cy="100" r="80" fill="#f5f5f5" stroke="#1a5f7a" stroke-width="2"/>
+                    <circle cx="75" cy="80" r="8" fill="#1a5f7a"/>
+                    <circle cx="125" cy="80" r="8" fill="#1a5f7a"/>
+                    <path d="M 70 120 L 130 120" stroke="#1a5f7a" stroke-width="4" fill="none" stroke-linecap="round"/>
+                `;
+                emotionText.textContent = 'درآمدها و هزینه‌ها برابر هستند!';
+                emotionState = 'neutral';
+            }
+        }
+
         // Initialize
         updateYearDisplay();
         updateDateDisplay();
+        updateEmotionDisplay();
     </script>
 </body>
 </html>
