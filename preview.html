@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابداری - نسخه 4.6.9</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-bg: #f8f9fa;
+            --dark-bg: #2c3e50;
+            --border-color: #ecf0f1;
+            --text-dark: #2c3e50;
+            --text-light: #95a5a6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .header-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .bell-icon, .voice-icon {
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .bell-icon:hover, .voice-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 10px;
+            right: 5px;
+            background: var(--danger-color);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* ============ YEAR SELECTOR ============ */
+        .year-selector {
+            background: #ecf0f1;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 10px;
+            border-radius: 8px;
+        }
+
+        .year-btn {
+            background: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .year-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .year-display {
+            font-size: 16px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* ============ CHARTS SECTION ============ */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+        }
+
+        .chart-box {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .chart-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .chart-placeholder {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        /* ============ EMOTION SECTION ============ */
+        .emotion-section {
+            padding: 20px 15px;
+            background: white;
+            text-align: center;
+            border-right: 4px solid #c0392b;
+            border-left: 4px solid #c0392b;
+            margin: 0 15px;
+            border-radius: 8px;
+        }
+
+        .emotion-display {
+            margin: 20px 0;
+        }
+
+        .emotion-icon {
+            font-size: 60px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .emotion-text {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+
+        /* ============ SHORTCUTS SECTION ============ */
+        .shortcuts-section {
+            padding: 15px;
+            background: white;
+            margin-top: 15px;
+        }
+
+        .shortcuts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .shortcuts-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .toggle-icon {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .shortcut-item {
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 12px;
+        }
+
+        .shortcut-item:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .shortcut-icon {
+            font-size: 20px;
+        }
+
+        .shortcut-label {
+            font-size: 10px;
+            text-align: center;
+        }
+
+        /* ============ COLLAPSIBLE SECTIONS ============ */
+        .collapsible-section {
+            margin: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            background: var(--light-bg);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            background: #dfe6e9;
+        }
+
+        .section-header h3 {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.show {
+            display: block;
+        }
+
+        /* ============ DATE SELECTOR ============ */
+        .date-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f5f6fa;
+            border-radius: 6px;
+        }
+
+        .date-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .date-display {
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* ============ TRANSACTION ITEMS ============ */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .transaction-icon {
+            font-size: 20px;
+            width: 36px;
+            height: 36px;
+            background: var(--light-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transaction-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .transaction-title {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .transaction-time {
+            font-size: 10px;
+            color: var(--text-light);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        .transaction-amount.expense {
+            color: var(--danger-color);
+        }
+
+        .transaction-amount.income {
+            color: var(--secondary-color);
+        }
+
+        /* ============ BANK ACCOUNTS ============ */
+        .account-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .account-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .account-icon {
+            font-size: 24px;
+        }
+
+        .account-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-name {
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .account-balance {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .account-amount {
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* ============ ADD BUTTON ============ */
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin: 10px auto;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        /* ============ BOTTOM NAV ============ */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            position: sticky;
+            bottom: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 12px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #e8f4f8;
+            color: var(--primary-color);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* ============ MODAL ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: flex-end;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-option {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-option:hover {
+            background: var(--light-bg);
+        }
+
+        .modal-option:last-child {
+            border-bottom: none;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                border-radius: 0;
+            }
+        }
+
+        .version {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            font-size: 10px;
+            color: var(--text-light);
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <div class="menu-icon" onclick="toggleMenu()">☰</div>
+            </div>
+            <div class="header-center">
+                <div style="font-size: 14px; font-weight: 600;">حسابداری</div>
+                <div style="font-size: 10px; opacity: 0.9;">نسخه 4.6.9</div>
+            </div>
+            <div class="header-right">
+                <div style="position: relative;">
+                    <div class="bell-icon" onclick="toggleNotifications()">🔔</div>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="voice-icon" onclick="toggleVoiceInput()">🎤</div>
+            </div>
+        </div>
+
+        <!-- YEAR SELECTOR -->
+        <div class="year-selector">
+            <button class="year-btn" onclick="previousYear()">−</button>
+            <div class="year-display" id="yearDisplay">۱۴۰۳</div>
+            <button class="year-btn" onclick="nextYear()">+</button>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <div class="charts-container">
+            <div class="chart-box">
+                <div class="chart-title">هزینه‌ها</div>
+                <div class="chart-placeholder">Sunburst<br>Chart</div>
+                <div style="font-size: 10px; color: var(--danger-color);">۵۲,۰۰۰ تومان</div>
+            </div>
+            <div class="chart-box">
+                <div class="chart-title">درآمدها</div>
+                <div class="chart-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Pie<br>Chart</div>
+                <div style="font-size: 10px; color: var(--secondary-color);">۳۵,۰۰۰ تومان</div>
+            </div>
+        </div>
+
+        <!-- EMOTION SECTION -->
+        <div class="emotion-section">
+            <div class="emotion-display">
+                <div class="emotion-icon" id="emotionIcon">😢</div>
+                <div class="emotion-text">هزینه‌ها بیشتر از درآمدها است!</div>
+            </div>
+        </div>
+
+        <!-- SHORTCUTS SECTION -->
+        <div class="shortcuts-section">
+            <div class="shortcuts-header" onclick="toggleShortcuts()">
+                <span class="shortcuts-title">⚡ میانبرها</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="shortcuts-grid" id="shortcutsGrid">
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">⚡</div>
+                    <div class="shortcut-label">برق</div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">💧</div>
+                    <div class="shortcut-label">آب</div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">🚕</div>
+                    <div class="shortcut-label">تاکسی</div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">⛽</div>
+                    <div class="shortcut-label">سوخت</div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">📡</div>
+                    <div class="shortcut-label">اینترنت</div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">🏠</div>
+                    <div class="shortcut-label">اجاره</div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon">🍔</div>
+                    <div class="shortcut-label">غذا</div>
+                </div>
+                <div class="shortcut-item" onclick="addNewShortcut()">
+                    <div class="shortcut-icon">+</div>
+                    <div class="shortcut-label">افزودن</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPENSES SECTION -->
+        <div class="collapsible-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h3>💸 هزینه‌ها</h3>
+                <span>▼</span>
+            </div>
+            <div class="section-content show">
+                <div class="date-selector">
+                    <button class="date-btn" onclick="previousDate()">◀</button>
+                    <div class="date-display" id="dateDisplay">امروز - ۷ مهر</div>
+                    <button class="date-btn" onclick="nextDate()">▶</button>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon">⚡</div>
+                        <div class="transaction-info">
+                            <div class="transaction-title">برق</div>
+                            <div class="transaction-time">۱۰:۳۰</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount expense">-۵۰۰ تومان</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon">🍔</div>
+                        <div class="transaction-info">
+                            <div class="transaction-title">خرید غذا</div>
+                            <div class="transaction-time">۱۴:۲۰</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount expense">-۳۵۰ تومان</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid var(--border-color); margin-top: 10px; font-weight: 600;">
+                    <span>جمع:</span>
+                    <span style="color: var(--danger-color);">-۸۵۰ تومان</span>
+                </div>
+
+                <button class="add-btn" style="margin: 10px auto;">+</button>
+            </div>
+        </div>
+
+        <!-- INCOME SECTION -->
+        <div class="collapsible-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h3>💰 درآمدها</h3>
+                <span>▼</span>
+            </div>
+            <div class="section-content show">
+                <div class="date-selector">
+                    <button class="date-btn" onclick="previousDate()">◀</button>
+                    <div class="date-display">امروز - ۷ مهر</div>
+                    <button class="date-btn" onclick="nextDate()">▶</button>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon">💼</div>
+                        <div class="transaction-info">
+                            <div class="transaction-title">حقوق</div>
+                            <div class="transaction-time">۰۹:۰۰</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount income">+۴۰۰۰ تومان</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon">🎁</div>
+                        <div class="transaction-info">
+                            <div class="transaction-title">هدیه</div>
+                            <div class="transaction-time">۱۶:۳۰</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount income">+۵۰۰ تومان</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid var(--border-color); margin-top: 10px; font-weight: 600;">
+                    <span>جمع:</span>
+                    <span style="color: var(--secondary-color);">+۴۵۰۰ تومان</span>
+                </div>
+
+                <button class="add-btn" style="margin: 10px auto;">+</button>
+            </div>
+        </div>
+
+        <!-- BANK ACCOUNTS -->
+        <div class="collapsible-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h3>🏦 حساب‌های بانکی</h3>
+                <span>▼</span>
+            </div>
+            <div class="section-content show">
+                <div class="account-item">
+                    <div class="account-info">
+                        <div class="account-icon">🏦</div>
+                        <div class="account-details">
+                            <div class="account-name">بانک ملی</div>
+                            <div class="account-balance">شماره حساب: ۱۲۳۴</div>
+                        </div>
+                    </div>
+                    <div class="account-amount">۱۵,۰۰۰</div>
+                </div>
+
+                <div class="account-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="account-info">
+                        <div class="account-icon">🏧</div>
+                        <div class="account-details">
+                            <div class="account-name">بانک سپه</div>
+                            <div class="account-balance">شماره حساب: ۵۶۷۸</div>
+                        </div>
+                    </div>
+                    <div class="account-amount">۸,۵۰۰</div>
+                </div>
+
+                <button class="add-btn">+</button>
+            </div>
+        </div>
+
+        <!-- PRIVATE FUNDS -->
+        <div class="collapsible-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h3>👝 صندوق شخصی</h3>
+                <span>▼</span>
+            </div>
+            <div class="section-content show">
+                <div class="account-item">
+                    <div class="account-info">
+                        <div class="account-icon">👜</div>
+                        <div class="account-details">
+                            <div class="account-name">کیف پول</div>
+                            <div class="account-balance">نقد</div>
+                        </div>
+                    </div>
+                    <div class="account-amount">۲,۵۰۰</div>
+                </div>
+
+                <div class="account-item" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #2c3e50;">
+                    <div class="account-info">
+                        <div class="account-icon">🔐</div>
+                        <div class="account-details">
+                            <div class="account-name">گاوصندوق</div>
+                            <div class="account-balance">پس‌انداز</div>
+                        </div>
+                    </div>
+                    <div class="account-amount">۱۰۰,۰۰۰</div>
+                </div>
+
+                <button class="add-btn">+</button>
+            </div>
+        </div>
+
+        <!-- BALANCE REPORT -->
+        <div class="collapsible-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h3>📊 گزارش مانده</h3>
+                <span>▼</span>
+            </div>
+            <div class="section-content show">
+                <div style="padding: 15px; background: var(--light-bg); border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>کل هزینه‌ها:</span>
+                        <span style="color: var(--danger-color); font-weight: 600;">-۱۲۰,۰۰۰ تومان</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>کل درآمدها:</span>
+                        <span style="color: var(--secondary-color); font-weight: 600;">+۹۵,۰۰۰ تومان</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>حساب‌های بانکی:</span>
+                        <span style="color: var(--primary-color); font-weight: 600;">+۲۳,۵۰۰ تومان</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid white;">
+                        <span style="font-weight: 600;">خالص:</span>
+                        <span style=\"font-weight: 600; color: var(--warning-color);\">-۱,۵۰۰ تومان</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 80px;"></div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="goToHome()">
+                <div class="nav-icon">🏠</div>
+                <div>خانه</div>
+            </div>
+            <div class="nav-item" onclick="goToTransactions()">
+                <div class="nav-icon">💱</div>
+                <div>تراکنش‌ها</div>
+            </div>
+            <div class="nav-item" onclick="goToReports()">
+                <div class="nav-icon">📈</div>
+                <div>گزارش‌ها</div>
+            </div>
+            <div class="nav-item" onclick="goToSettings()">
+                <div class="nav-icon">⚙️</div>
+                <div>تنظیمات</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>نوع تراکنش</h3>
+                <button class="close-btn" onclick="closeModal('transactionModal')">✕</button>
+            </div>
+            <div class="modal-option" onclick="showTransactionForm('payment')">💳 پرداخت</div>
+            <div class="modal-option" onclick="showTransactionForm('income')">💰 دریافت</div>
+            <div class="modal-option" onclick="showTransactionForm('transfer')">↔️ انتقال</div>
+        </div>
+    </div>
+
+    <div class="modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>اطلاعات</h3>
+                <button class="close-btn" onclick="closeModal('notificationModal')">✕</button>
+            </div>
+            <div class="modal-option">
+                <div style="font-size: 12px; color: var(--text-light); margin-bottom: 5px;">۶ مهر - ۰۹:۳۰</div>
+                <div style="font-weight: 600;">۱۰۰۰ تومان از حساب ملی برداشت شد</div>
+            </div>
+            <div class="modal-option">
+                <div style="font-size: 12px; color: var(--text-light); margin-bottom: 5px;">۵ مهر - ۱۴:۲۰</div>
+                <div style="font-weight: 600;">۵۰۰۰ تومان به حساب سپه واریز شد</div>
+            </div>
+            <div class="modal-option">
+                <div style="font-size: 12px; color: var(--text-light); margin-bottom: 5px;">۴ مهر - ۱۰:۰۰</div>
+                <div style="font-weight: 600;">⚠️ چک شماره ۱۲۳ سررسید شد!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="version">v4.6.9</div>
+
+    <script>
+        let currentYear = 1403;
+        let currentDate = new Date();
+        let emotionState = 'sad'; // sad, happy, neutral
+
+        function toggleMenu() {
+            alert('منوی کشویی - تنظیمات و گزینه‌های بیشتر');
+        }
+
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('show');
+        }
+
+        function toggleVoiceInput() {
+            alert('🎤 ورود صوتی\n\nمثال: \"۵۰۰ تومان برای برق ثبت کن\"');
+        }
+
+        function previousYear() {
+            currentYear--;
+            updateYearDisplay();
+        }
+
+        function nextYear() {
+            currentYear++;
+            updateYearDisplay();
+        }
+
+        function updateYearDisplay() {
+            document.getElementById('yearDisplay').textContent = this.formatPersianNumber(currentYear.toString());
+        }
+
+        function toggleShortcuts() {
+            const grid = document.getElementById('shortcutsGrid');
+            const icon = document.querySelector('.toggle-icon');
+            grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+            icon.classList.toggle('open');
+        }
+
+        function addNewShortcut() {
+            alert('افزودن میانبر جدید برای هزینه‌های مورد علاقه شما');
+        }
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+            const icon = header.querySelector('span:last-child');
+            icon.style.transform = content.classList.contains('show') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        function previousDate() {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+        }
+
+        function nextDate() {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+        }
+
+        function updateDateDisplay() {
+            const day = currentDate.getDate();
+            const month = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'][currentDate.getMonth()];
+            document.getElementById('dateDisplay').textContent = `امروز - ${day} ${month}`;
+        }
+
+        function goToHome() {
+            setActiveNav(0);
+            alert('صفحه اصلی');
+        }
+
+        function goToTransactions() {
+            setActiveNav(1);
+            alert('صفحه تراکنش‌ها');
+        }
+
+        function goToReports() {
+            setActiveNav(2);
+            alert('صفحه گزارش‌ها');
+        }
+
+        function goToSettings() {
+            setActiveNav(3);
+            alert('صفحه تنظیمات');
+        }
+
+        function setActiveNav(index) {
+            document.querySelectorAll('.nav-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        function showTransactionForm(type) {
+            closeModal('transactionModal');
+            alert(`فرم ثبت ${type === 'payment' ? 'پرداخت' : type === 'income' ? 'درآمد' : 'انتقال'}`);
+        }
+
+        function formatPersianNumber(num) {
+            const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return num.replace(/\d/g, d => persianDigits[d]);
+        }
+
+        // Initialize
+        updateYearDisplay();
+        updateDateDisplay();
+    </script>
+</body>
+</html>
