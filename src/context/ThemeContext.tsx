@@ -1,1 +1,60 @@
-import React, { createContext, useState } from 'react';\n\ninterface ThemeContextType {\n  isDarkMode: boolean;\n  toggleDarkMode: (isDark: boolean) => void;\n  colors: {\n    primary: string;\n    secondary: string;\n    danger: string;\n    warning: string;\n    success: string;\n    lightBg: string;\n    darkBg: string;\n    borderColor: string;\n    textDark: string;\n    textLight: string;\n  };\n}\n\nconst ThemeContext = createContext<ThemeContextType | undefined>(undefined);\n\nexport const ThemeProvider: React.FC<{ isDarkMode: boolean; children: React.ReactNode }> = ({\n  isDarkMode: initialDarkMode,\n  children,\n}) => {\n  const [isDarkMode, setIsDarkMode] = useState(initialDarkMode);\n\n  const colors = {\n    primary: '#3498db',\n    secondary: '#2ecc71',\n    danger: '#e74c3c',\n    warning: '#f39c12',\n    success: '#27ae60',\n    lightBg: '#f8f9fa',\n    darkBg: '#2c3e50',\n    borderColor: '#ecf0f1',\n    textDark: '#2c3e50',\n    textLight: '#95a5a6',\n  };\n\n  const toggleDarkMode = (isDark: boolean) => {\n    setIsDarkMode(isDark);\n  };\n\n  return (\n    <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode, colors }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n};\n\nexport const useTheme = () => {\n  const context = React.useContext(ThemeContext);\n  if (!context) {\n    throw new Error('useTheme must be used within ThemeProvider');\n  }\n  return context;\n};\n\nexport default ThemeContext;\n
+import React, { createContext, useState } from 'react';
+
+interface ThemeContextType {
+  isDarkMode: boolean;
+  toggleDarkMode: (isDark: boolean) => void;
+  colors: {
+    primary: string;
+    secondary: string;
+    danger: string;
+    warning: string;
+    success: string;
+    lightBg: string;
+    darkBg: string;
+    borderColor: string;
+    textDark: string;
+    textLight: string;
+  };
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider: React.FC<{ isDarkMode: boolean; children: React.ReactNode }> = ({
+  isDarkMode: initialDarkMode,
+  children,
+}) => {
+  const [isDarkMode, setIsDarkMode] = useState(initialDarkMode);
+
+  const colors = {
+    primary: '#3498db',
+    secondary: '#2ecc71',
+    danger: '#e74c3c',
+    warning: '#f39c12',
+    success: '#27ae60',
+    lightBg: '#f8f9fa',
+    darkBg: '#2c3e50',
+    borderColor: '#ecf0f1',
+    textDark: '#2c3e50',
+    textLight: '#95a5a6',
+  };
+
+  const toggleDarkMode = (isDark: boolean) => {
+    setIsDarkMode(isDark);
+  };
+
+  return (
+    <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode, colors }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => {
+  const context = React.useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
+  }
+  return context;
+};
+
+export default ThemeContext;
