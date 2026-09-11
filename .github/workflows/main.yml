@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-debug:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,24 +35,39 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Build APK
+      - name: Build Debug APK
         run: |
           cd android
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
           cd ..
 
-      - name: Upload Artifact
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: android/app/build/outputs/apk/release/app-release.apk
-          tag_name: v${{ github.run_number }}
-          body: "حسابداری APK - نسخه 4.6.9"
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+          tag_name: v${{ github.run_number }}-debug
+          name: "حسابدار من - Debug Build #${{ github.run_number }}"
+          body: |
+            🚀 **نسخه Debug APK**
+            
+            ✅ این نسخه برای تست روی دستگاه‌های Android است
+            
+            📲 برای نصب:
+            1. فایل APK را دانلود کنید
+            2. روی دستگاه Android منتقل کنید
+            3. دو‌بار روی فایل ضربه بزنید و نصب را تایید کنید
+            
+            ⚠️ توجه: این نسخه release نیست، تنها برای تست است
+            
+            📝 تغییرات: https://github.com/${{ github.repository }}/commits/${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: success()
+
